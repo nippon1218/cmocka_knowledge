@@ -230,6 +230,7 @@ static void test_add(void **state) {
 需要注意的是 `will_return()` 和 `mock()` 要**成对出现**，执行测试用例的过程中，如果发现 `will_return()` `和 mock()` 没有成对出现，就会将测试用例标记为失败。
 
 **举个例子：**
+
 ```
 int mock_function(void)
 {
@@ -252,7 +253,7 @@ will_return_always(function, value)
 will_return_maybe(function, value)
 ```
 
-其实，这些接口最终都是以 `will_return_count` 作为基础，理解了 `will_return_count`，就能掌握所有接口。`will_return_count` 的第三个参数 `count` 表明应该通过 `mock()` 返回的次数，即应该执行 `mock()` 的次数，如果不匹配，就会将测试用例标记为失败。如果 `count` 设置为`-1`，表明可以无数次执行 `mock()`，但至少得执行一次。如果 `count` 设置为-`2`，表明可以无数次执行 `mock()`，甚至一次都不执行也可以。
+其实，这些接口最终都是以 `will_return_count` 作为基础，理解了 `will_return_count`，就能掌握所有接口。`will_return_count` 的第三个参数 `count` 表明应该通过 `mock()` 返回的次数，<font color = 'red'> 即应该执行 `mock()` 的次数，如果不匹配，就会将测试用例标记为失败</font>。如果 `count` 设置为`-1`，表明可以无数次执行 `mock()`，但至少得执行一次。如果 `count` 设置为-`2`，表明可以无数次执行 `mock()`，甚至一次都不执行也可以。
 
 `will_return(function, value)` 相当于 `will_return_count(function, value, 1)`
 `will_return_always(function, value)` 相当于 `will_return_count(function, value, -1)`
@@ -562,8 +563,7 @@ int main(void) {
 
 源码 `cmocka/tests/test_skip_filter.c` 和 `cmocka/tests/test_wildcard.c` 演示了 `cmocka_set_test_filter()` 和 `cmocka_set_skip_filter()` 的用法，可自行查阅。
 
-### 5 参考资料
-![Alt text](./1581705988206.png)
+
 
 
 
