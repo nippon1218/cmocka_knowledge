@@ -3,6 +3,7 @@
 #include <setjmp.h>
 #include <cmocka.h>
 #include <stdlib.h>
+#include "test.h"
 
 int mock_function(void);
 void mock_function_call_times(size_t times, int expectedValue);
