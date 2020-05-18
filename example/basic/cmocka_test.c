@@ -27,7 +27,6 @@ static int sum(int a, int b)
 static void assert_test(void **state) {
     const unsigned long test_sets[3]={1, 3, 5};
     (void) state;
-//    fail_msg("assert_test");
     assert_int_equal(3, 3);
     assert_int_not_equal(2, 4);
     assert_float_equal(2.0, 2.1, 0.4);
@@ -97,14 +96,53 @@ static void test_segfault_recovery(void **state)
     seg->y = 2;
 }
 
+/*
+ * expect_value
+ */
+static int cal_sum(int a, int b)
+{
+	check_expected(a);
+	check_expected(b);
+	return (int)mock();
+}
+
+static int cal_mul(int a, int b)
+{
+	check_expected(a);
+	check_expected(b);
+    return a * b;
+}
+
+static void test_except_value(void **state)
+{
+    expect_value(cal_sum, a , 4);
+    expect_value(cal_sum, b , 3);
+    expect_value(cal_mul, a , 2);
+    expect_value(cal_mul, b , 5);
+    will_return(cal_sum, 6);
+
+    assert_int_equal(cal_sum(4,3), 6);
+    assert_int_equal(cal_mul(2,5), 10);
+}
+
 int main(void) {
-    const struct CMUnitTest tests[] = {
+    const struct CMUnitTest assert_tests[] = {
         cmocka_unit_test(assert_test),
-        cmocka_unit_test(mock_function_test),
-        cmocka_unit_test(mock_function_test2),
         cmocka_unit_test(test_segfault_recovery)
     };
 
-    return cmocka_run_group_tests(tests, NULL, NULL);
+    const struct CMUnitTest mock_fun_tests[] = {
+        cmocka_unit_test(mock_function_test),
+        cmocka_unit_test(mock_function_test2),
+    };
+
+    const struct CMUnitTest mock_except_tests[] = {
+        cmocka_unit_test(test_except_value),
+    };
+
+    cmocka_run_group_tests(assert_tests, NULL, NULL);
+    cmocka_run_group_tests(mock_fun_tests, NULL, NULL);
+    cmocka_run_group_tests(mock_except_tests, NULL, NULL);
+    return 0;
 }
 
